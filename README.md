@@ -23,7 +23,7 @@ The expected runtime for the model including pre/post-processing is ~10 minutes.
 ### Use with preprocessed data
 If you do not supply the `--ct` flag, no pre/post-processing will be performed, i.e. the model assumes that your data is:
  - skullstripped, 
- - spatially normalized to MNI space, 
+ - spatially normalized to MNI space (256x256x256 matrix / 1mm isotropic voxel size), 
  - with images cropped to 176x176x200, 
  - decay correction and 95% percentile normalization applied
 

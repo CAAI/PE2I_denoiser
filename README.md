@@ -4,7 +4,7 @@ The tool denoises Vision and Quadra PET data acquired with PE2I tracer at low-do
 
 The model was trained with ~100 PE2I patients imaged on a Siemens Vision mCT system for 10 minutes with >180 MBq injected dose. Low-dose was simulated at a 5% level.
 
-The model is transfer learned from the model proposed by Raphael S. Daveau, *et al.* *Deep learning based low-activity PET reconstruction of [18F]FE-PE2I and [11C]PiB in Neurodegenerative Disorders* (2022).
+The model is transfer learned from the model proposed by Raphael S. Daveau, *et al.* *Deep learning based low-activity PET reconstruction of [18F]FE-PE2I and [11C]PiB in Neurodegenerative Disorders*, NeuroImage (2022).
 
 ## Usage
 

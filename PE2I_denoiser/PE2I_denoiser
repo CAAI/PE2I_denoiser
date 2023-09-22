@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+import os
+from pathlib import Path
+from PE2I_denoiser.run import Denoiser
+from PE2I_denoiser.utils import get_params_fname
+
+if __name__ == "__main__":
+
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--pet",
+                        help="Input file to be denoised",
+                        type=str, default=None)
+
+    parser.add_argument('--ct', help="CT file used for preprocessing", type=str, default=None)
+
+    parser.add_argument('--out', help="Output denoised file", type=str, default=None)
+
+    parser.add_argument('--add_blurring', action='store_true', help="Add blurring to non-brain tissue before fusing")
+
+    parser.add_argument('-si', '--save_intermediate_files', action='store_true')
+    parser.add_argument('-io', '--intermediate_files_output_dir', help="Directory to store intermediate files to", type=str, default='PE2I_denoised_intermediate_files')
+    parser.add_argument('-oi', '--overwrite_intermediate_files', action='store_true')
+
+    parser.add_argument("-m", "--model",
+                        help="Select model used for denoising",
+                        type=str, default='Vision_TLmCT_5pct_v3')
+    
+    parser.add_argument("-s", "--scale",
+                        help="Scale the low-dose image",
+                        type=float, default=1.0)
+    
+    parser.add_argument('-v', '--verbose', action='store_true')
+    
+    args = parser.parse_args()
+
+    # Check the model exists:
+    try:
+        get_params_fname(args.model)
+    except:
+        raise ValueError('Could not find model:', args.model)
+
+    denoiser = Denoiser(args.pet, args.ct, args.verbose)
+    denoiser.preprocess(args.scale)
+    denoiser.inference(args.model)
+    denoiser.postprocess(add_blurring=args.add_blurring)
+    if args.save_intermediate_files:
+        denoiser.save_intermediate_files(args.intermediate_files_output_dir, args.overwrite_intermediate_files)
+    denoiser.save(args.out)
+    denoiser.clean()

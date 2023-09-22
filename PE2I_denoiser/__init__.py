@@ -1,0 +1,3 @@
+from PE2I_denoiser.utils import maybe_download_parameters_and_template
+
+maybe_download_parameters_and_template()

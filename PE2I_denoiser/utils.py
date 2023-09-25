@@ -32,7 +32,7 @@ def maybe_download_parameters_and_template(force_overwrite=False):
     # Remove old files when version is updated
     for f in os.listdir(folder_with_parameter_files):
         if f.endswith('.onnx') and f not in models.values():
-            os.remove(get_params_fname(f, is_key=False))
+            os.remove(os.path.join(folder_with_parameter_files, f))
 
     for model in models.values():
         out_filename = get_params_fname(model, is_key=False)

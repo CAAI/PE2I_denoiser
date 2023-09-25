@@ -40,7 +40,7 @@ def maybe_download_parameters_and_template(force_overwrite=False):
             os.remove(out_filename)
 
         if not os.path.isfile(out_filename):
-            url = f"https://zenodo.org/record/8376789/files/{model}?download=1"
+            url = f"https://zenodo.org/record/8376789/files/{model}.onnx?download=1"
             print("Downloading", url, "...")
             data = urlopen(url).read()
             with open(out_filename, 'wb') as f:

@@ -6,8 +6,16 @@ import subprocess as subp
 from nipype.interfaces.fsl import ConvertXFM
 import nibabel as nib
 
-def get_params_fname(model):
-    return os.path.join(folder_with_parameter_files, f"{model}.onnx")
+# Actual models in use
+models = {
+    'Vision_TLmCT_1-5pct': 'Vision_TLmCT_1-5pct_v3_220923'
+}
+
+def get_params_fname(model, is_key=True):
+    if not is_key:
+        return os.path.join(folder_with_parameter_files, f"{model}.onnx")
+    else:
+        return os.path.join(folder_with_parameter_files, f"{models[model]}.onnx")
 
 def get_template_fname():
     return os.path.join(folder_with_parameter_files, 'avg_template.nii.gz')
@@ -21,15 +29,18 @@ def maybe_download_parameters_and_template(force_overwrite=False):
 
     maybe_mkdir_p(folder_with_parameter_files)
 
-    models = ['Vision_TLmCT_5pct_v3']
+    # Remove old files when version is updated
+    for f in os.listdir(folder_with_parameter_files):
+        if f.endswith('.onnx') and f not in models.values():
+            os.remove(get_params_fname(f, is_key=False))
 
-    for model in models:
-        out_filename = get_params_fname(model)
+    for model in models.values():
+        out_filename = get_params_fname(model, is_key=False)
         if force_overwrite and os.path.isfile(out_filename):
             os.remove(out_filename)
 
         if not os.path.isfile(out_filename):
-            url = f"https://zenodo.org/record/8369678/files/{model}.onnx?download=1"
+            url = f"https://zenodo.org/record/8376789/files/{model}.onnx?download=1"
             print("Downloading", url, "...")
             data = urlopen(url).read()
             with open(out_filename, 'wb') as f:
@@ -37,7 +48,7 @@ def maybe_download_parameters_and_template(force_overwrite=False):
 
     out_templatename = get_template_fname()
     if not os.path.isfile(out_templatename):
-        url = f"https://zenodo.org/record/8369678/files/avg_template.nii.gz?download=1"
+        url = f"https://zenodo.org/record/8376789/files/avg_template.nii.gz?download=1"
         print("Downloading", url, "...")
         data = urlopen(url).read()
         with open(out_templatename, 'wb') as f:
